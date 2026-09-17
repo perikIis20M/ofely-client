@@ -1,0 +1,7 @@
+{
+  "name": "ofely-mod-updater",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Standalone Ofely-style Modrinth mod updater",
+  "main": "main.js"
+}

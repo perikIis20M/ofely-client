@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#211a30">
+  <meta name="description" content="Ofely Client is a Minecraft launcher and mod migration toolkit. Coming soon.">
+  <title>Ofely Client &mdash; Coming Soon</title>
+  <link rel="icon" href="assets/icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="world" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="wordmark" href="#top" aria-label="Ofely Client home">
+      <img src="assets/icon.png" alt="">
+      <span>OFELY CLIENT</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#client">Client</a>
+      <a href="#updater">Updater</a>
+      <span class="status"><i></i> Building</span>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="heroInner">
+        <img class="banner" src="assets/banner.png" alt="Ofely Client" id="hero-title">
+        <p class="eyebrow">A MINECRAFT CLIENT BUILT WITH CARE</p>
+        <h1>COMING SOON</h1>
+        <p class="lead">Launch clean. Move between versions. Keep your Minecraft world yours.</p>
+        <div class="buildLine" aria-label="Development in progress"><span></span></div>
+        <a class="primaryButton" href="#products">See what is coming <b>&darr;</b></a>
+      </div>
+      <blockquote>&ldquo;Make the complicated parts disappear.&rdquo;</blockquote>
+    </section>
+
+    <section class="products" id="products" aria-labelledby="products-title">
+      <div class="sectionHeading">
+        <span>IN DEVELOPMENT</span>
+        <h2 id="products-title">Two tools. One Minecraft home.</h2>
+      </div>
+      <div class="productGrid">
+        <article class="product" id="client">
+          <div class="productIcon"><img src="assets/icon.png" alt=""></div>
+          <div class="productCopy">
+            <span class="productNumber">01 / CLIENT</span>
+            <h3>Ofely Client</h3>
+            <p>A focused launcher for profiles, skins, worlds, Modrinth content, and optional in-game features.</p>
+          </div>
+          <span class="productState">COMING SOON</span>
+        </article>
+        <article class="product" id="updater">
+          <div class="productIcon updaterIcon" aria-hidden="true">&#8635;</div>
+          <div class="productCopy">
+            <span class="productNumber">02 / UPDATER</span>
+            <h3>Ofely Mod Updater</h3>
+            <p>Move an installed mods folder from one Minecraft version to another with verified downloads and clear compatibility warnings.</p>
+          </div>
+          <span class="productState available">IN TESTING</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="signal" aria-label="Project statement">
+      <p>BUILT FOR PLAYERS WHO WOULD RATHER PLAY THAN REPAIR FOLDERS.</p>
+      <div class="pixelTrail" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>&copy; <span id="year"></span> OFELY CLIENT</span>
+    <span>BWRS.ONLINE</span>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

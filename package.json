@@ -1,0 +1,12 @@
+{
+  "name": "ofely-public",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ofely Client website and Minecraft mod migration utility",
+  "scripts": {
+    "updater": "electron updater"
+  },
+  "devDependencies": {
+    "electron": "^42.4.1"
+  }
+}

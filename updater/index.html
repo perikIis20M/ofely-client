@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ofely Mod Updater</title>
+  <style>
+    @font-face { font-family: "Ofely Minecraft"; src: url("../docs/assets/Minecraft.ttf") format("truetype"); font-weight: 400 900; font-style: normal; font-display: swap; }
+    :root {
+      --base: #161221;
+      --panel: #282139;
+      --panel-2: #211a30;
+      --panel-3: #3a2f52;
+      --line: #8d7cb1;
+      --line-soft: #55476e;
+      --text: #f4efff;
+      --muted: #c9bfdc;
+      --purple: #7a61ce;
+      --purple-hi: #a58dff;
+      --green: #77b96a;
+      --amber: #d89a20;
+      --red: #e46974;
+      --blue: #6eb9df;
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      color: var(--text);
+      background: var(--base) url("../docs/assets/ofely-background.png") center/cover fixed;
+      font: 13px/1.35 "Ofely Minecraft", Minecraft, Minecraftia, Mojangles, "Courier New", monospace;
+    }
+    body::before { content: ""; position: fixed; inset: 0; background: rgba(18, 13, 27, .84); pointer-events: none; }
+    button, input, select { font: inherit; border: 2px solid var(--line); border-radius: 0; color: var(--text); box-shadow: inset 2px 2px rgba(255,255,255,.08), inset -2px -2px rgba(0,0,0,.22), 0 1px 0 rgba(0,0,0,.3); }
+    button { cursor: pointer; }
+    button:hover:not(:disabled) { background: #4a3a70; }
+    button:active:not(:disabled) { box-shadow: inset -1px -1px rgba(255,255,255,.12), inset 2px 2px rgba(0,0,0,.3); transform: translateY(1px); }
+    button:disabled { cursor: default; opacity: .48; }
+    input, select { background: #211a30; }
+    input:focus, select:focus, button:focus-visible { outline: 0; border-color: #a58dff; box-shadow: inset 2px 2px rgba(0,0,0,.2), 0 0 0 3px rgba(127,101,210,.28); }
+    select { appearance: none; padding-right: 29px !important; background: linear-gradient(45deg, transparent 50%, #a58dff 50%) calc(100% - 15px) 16px / 7px 7px no-repeat, linear-gradient(135deg, #a58dff 50%, transparent 50%) calc(100% - 10px) 16px / 7px 7px no-repeat, #211a30; }
+    .app { position: relative; z-index: 1; height: 100%; display: grid; grid-template-rows: 42px auto auto auto auto 1fr 40px; }
+    .titlebar { display: flex; align-items: stretch; background: #211a30; border-bottom: 3px solid #d2c5ee; -webkit-app-region: drag; }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 236px; padding: 0 15px; font-family: inherit; font-size: 15px; text-shadow: 2px 2px 0 #15101f; }
+    .brand img { width: 25px; height: 25px; image-rendering: pixelated; }
+    .tabs { display: flex; align-items: stretch; -webkit-app-region: no-drag; }
+    .tab { min-width: 110px; border: 0; border-left: 1px solid var(--line-soft); color: var(--muted); background: transparent; }
+    .tab.active { color: white; background: var(--purple); text-shadow: 2px 2px 0 #191124; box-shadow: inset 2px 2px rgba(255,255,255,.14), inset -2px -2px rgba(0,0,0,.24); }
+    .tab.soon { color: #857d90; }
+    .windowButtons { margin-left: auto; display: flex; -webkit-app-region: no-drag; }
+    .windowButtons button { width: 32px; border: 0; border-left: 1px solid var(--line-soft); color: var(--text); background: transparent; font-size: 15px; box-shadow: none; }
+    .windowButtons button:hover { background: var(--panel-3); }
+    .windowButtons .close:hover { background: #a53d51; }
+    .ad { margin: 14px 18px 0; min-height: 76px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; padding: 13px 18px; border: 3px solid #d2c5ee; background: rgba(40, 33, 57, .94); box-shadow: inset 2px 2px rgba(255,255,255,.08), inset -2px -2px rgba(0,0,0,.18), 0 4px 0 rgba(0,0,0,.28); }
+    .adMark { padding: 5px 7px; border: 1px solid var(--amber); color: var(--amber); font: 10px Ofely, monospace; }
+    .ad strong { display: block; font: 16px "Ofely Minecraft", monospace; margin-bottom: 4px; }
+    .ad span { color: var(--muted); }
+    .adAction { border: 1px solid var(--line); background: var(--panel-3); color: var(--text); padding: 10px 14px; }
+    .controls { margin: 10px 18px 0; display: grid; grid-template-columns: minmax(260px, 1fr) 155px 155px 135px auto; gap: 8px; }
+    .selectField { height: 48px; display: grid; grid-template-rows: 16px 1fr; padding: 3px 8px 4px; border: 2px solid var(--line); background: #211a30; box-shadow: inset 2px 2px rgba(0,0,0,.22); }
+    .selectField span { color: var(--muted); font-size: 9px; line-height: 14px; }
+    .selectField select { width: 100%; min-width: 0; border: 0; padding: 0 25px 0 0 !important; box-shadow: none; background-position: calc(100% - 12px) 8px, calc(100% - 7px) 8px; }
+    .field { height: 42px; display: flex; align-items: center; border: 2px solid var(--line); background: #211a30; box-shadow: inset 2px 2px rgba(0,0,0,.22); }
+    .field input, .field select { width: 100%; height: 100%; border: 0; outline: 0; color: var(--text); background: transparent; padding: 0 12px; min-width: 0; }
+    .field select { color-scheme: dark; }
+    .directory input { color: var(--muted); }
+    .browse, .scan, .primary, .secondary { color: var(--text); background: var(--panel-3); padding: 0 15px; }
+    .browse { align-self: stretch; border-width: 0 0 0 1px; }
+    .scan { height: 48px; background: var(--purple); border-color: #a894cf; font-weight: 800; }
+    .outputOptions { margin: 8px 18px 0; display: grid; grid-template-columns: 250px minmax(280px, 1fr); gap: 8px; }
+    .outputOptions.hiddenPath { grid-template-columns: 250px; }
+    .outputOptions.hiddenPath .outputDirectory { display: none; }
+    .summary { margin: 8px 18px 0; min-height: 58px; display: flex; align-items: center; gap: 22px; padding: 8px 13px; border: 3px solid #d2c5ee; background: rgba(40, 33, 57, .94); box-shadow: inset 2px 2px rgba(255,255,255,.08), inset -2px -2px rgba(0,0,0,.18), 0 4px 0 rgba(0,0,0,.28); }
+    .metric strong { font: 17px "Ofely Minecraft", monospace; margin-right: 6px; }
+    .metric span { color: var(--muted); }
+    .summary .spacer { flex: 1; }
+    .secondary, .primary { min-height: 36px; }
+    .primary { color: #e9ffe4; background: #2f5a36; border-color: #77b96a; font-weight: 800; }
+    .primary:hover:not(:disabled), .actions .updateButton:hover:not(:disabled) { background: #3b7044; }
+    .content { margin: 8px 18px 0; min-height: 0; border: 3px solid #d2c5ee; background: #211a30; box-shadow: inset 0 0 0 2px #2d253e, 0 3px 0 rgba(0,0,0,.22); display: grid; grid-template-rows: 38px 1fr; }
+    .tableHead, .modRow { display: grid; grid-template-columns: minmax(280px, 1fr) 120px 120px 145px 190px; align-items: center; column-gap: 10px; }
+    .tableHead { padding: 0 12px; color: var(--muted); background: #2d253e; border-bottom: 2px solid var(--line-soft); font-size: 11px; text-transform: uppercase; }
+    .rows { min-height: 0; overflow: auto; }
+    .modRow { min-height: 70px; padding: 8px 12px; border-bottom: 1px solid #44385c; background: #241d34; }
+    .modRow:nth-child(even) { background: #2a223d; }
+    .modRow:hover { background: #352a4e; }
+    .modInfo { min-width: 0; display: grid; grid-template-columns: 46px 1fr; gap: 11px; align-items: center; }
+    .modIcon { width: 44px; height: 44px; border: 1px solid var(--line); background: var(--panel-3); object-fit: cover; image-rendering: auto; }
+    .fallbackIcon { display: grid; place-items: center; color: var(--purple-hi); font: 18px "Ofely Minecraft", monospace; }
+    .modTitle { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .modDescription { margin-top: 3px; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .version { color: #ddd6e8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .status { font-size: 12px; }
+    .status.good { color: var(--green); }
+    .status.update { color: var(--amber); }
+    .status.bad { color: var(--red); }
+    .status.info { color: var(--blue); }
+    .actions { display: flex; justify-content: flex-end; gap: 6px; }
+    .actions button { min-height: 32px; color: var(--text); background: var(--panel-3); padding: 0 10px; }
+    .actions .updateButton { color: #e9ffe4; background: #2f5a36; border-color: var(--green); }
+    .empty { height: 100%; min-height: 180px; display: grid; place-items: center; text-align: center; color: var(--muted); }
+    .empty strong { display: block; color: var(--text); font: 17px "Ofely Minecraft", monospace; margin-bottom: 8px; }
+    .footer { margin: 0 18px; display: grid; grid-template-columns: 1fr 260px; align-items: center; gap: 14px; color: var(--muted); font-size: 12px; }
+    .progressTrack { height: 8px; border: 1px solid var(--line); background: #100d16; }
+    .progressBar { width: 0; height: 100%; background: var(--purple-hi); transition: width .18s ease; }
+    .modal { position: fixed; z-index: 5; inset: 0; display: none; place-items: center; padding: 30px; background: rgba(5, 4, 8, .72); }
+    .modal.open { display: grid; }
+    .dialog { width: min(760px, 90vw); max-height: 78vh; display: grid; grid-template-rows: auto 1fr auto; border: 3px solid #d2c5ee; background: #211a30; box-shadow: inset 2px 2px rgba(255,255,255,.08), inset -2px -2px rgba(0,0,0,.18), 0 8px 0 rgba(0,0,0,.34); }
+    .dialogHeader { padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    .dialogHeader strong { font: 17px Ofely, monospace; }
+    .dialogHeader div { margin-top: 5px; color: var(--muted); }
+    .versionList { overflow: auto; padding: 8px; }
+    .versionRow { width: 100%; display: grid; grid-template-columns: 1fr 120px 125px; align-items: center; gap: 10px; padding: 11px; border: 0; border-bottom: 1px solid var(--line-soft); color: var(--text); text-align: left; background: transparent; }
+    .versionRow:hover { background: var(--panel-3); }
+    .versionRow small { color: var(--muted); }
+    .versionType { color: var(--blue); text-transform: uppercase; font-size: 11px; }
+    .dialogFooter { display: flex; justify-content: flex-end; padding: 10px; border-top: 1px solid var(--line); }
+    .toast { position: fixed; z-index: 8; right: 22px; bottom: 52px; max-width: 430px; padding: 12px 15px; border: 1px solid var(--line); background: #30263f; box-shadow: 0 10px 35px rgba(0,0,0,.4); transform: translateY(20px); opacity: 0; pointer-events: none; transition: .2s ease; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { border-color: var(--red); }
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track { background: #15111c; }
+    ::-webkit-scrollbar-thumb { background: #55456e; border: 2px solid #15111c; }
+    @media (max-width: 970px) {
+      .controls { grid-template-columns: 1fr 145px 145px; }
+      .directory { grid-column: 1 / -1; }
+      .tableHead, .modRow { grid-template-columns: minmax(250px, 1fr) 110px 135px 160px; }
+      .latestColumn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="titlebar">
+      <div class="brand"><img src="../docs/assets/icon.png" alt=""><span>OFELY UPDATER</span></div>
+      <nav class="tabs"><button class="tab active">Mods</button><button class="tab soon" id="packsTab">Texture Packs · Soon</button></nav>
+      <div class="windowButtons"><button id="minimize" title="Minimize">−</button><button id="maximize" title="Maximize">□</button><button id="close" class="close" title="Close">×</button></div>
+    </header>
+
+    <section class="ad">
+      <div class="adMark">AD</div>
+      <div><strong>YOUR SERVER OR PROJECT HERE</strong><span>This space is ready for a future sponsor, server, or Ofely announcement.</span></div>
+      <button class="adAction" id="adAction">Learn more</button>
+    </section>
+
+    <section class="controls">
+      <div class="field directory"><input id="directory" readonly placeholder="Choose the folder that contains your mod JAR files"><button class="browse" id="browse">Browse</button></div>
+      <label class="selectField"><span>FROM MINECRAFT</span><select id="currentGameVersion" title="Current Minecraft version"></select></label>
+      <label class="selectField"><span>TO MINECRAFT</span><select id="gameVersion" title="Target Minecraft version"></select></label>
+      <label class="selectField"><span>MOD LOADER</span><select id="loader" title="Mod loader"></select></label>
+      <button class="scan" id="scan">Check migration</button>
+    </section>
+
+    <section class="outputOptions hiddenPath" id="outputOptions">
+      <label class="field"><select id="outputMode" title="Where updates are written"><option value="in-place">Update installed mods</option><option value="folder">Save updates to output folder</option></select></label>
+      <div class="field outputDirectory"><input id="outputDirectory" readonly placeholder="Output folder"><button class="browse" id="browseOutput">Browse</button></div>
+    </section>
+
+    <section class="summary">
+      <div class="metric"><strong id="installedCount">0</strong><span>installed</span></div>
+      <div class="metric"><strong id="updateCount">0</strong><span>ready</span></div>
+      <div class="metric"><strong id="unknownCount">0</strong><span>local only</span></div>
+      <div class="spacer"></div>
+      <button class="secondary" id="openFolder" disabled>Open mods folder</button>
+      <button class="primary" id="updateAll" disabled>Migrate everything</button>
+    </section>
+
+    <section class="content">
+      <div class="tableHead"><span>Mod</span><span>Current MC</span><span class="latestColumn">Target MC</span><span>Status</span><span></span></div>
+      <div class="rows" id="rows"><div class="empty"><div><strong>CHOOSE A MINECRAFT FOLDER</strong>Ofely will safely check every installed JAR against Modrinth.</div></div></div>
+    </section>
+
+    <footer class="footer"><span id="statusText">Ready</span><div class="progressTrack"><div class="progressBar" id="progressBar"></div></div></footer>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const api = window.ofelyUpdater;
+    const el = (id) => document.getElementById(id);
+    const state = { rows: [], busy: false, selectedRow: null };
+    const directory = el('directory');
+    const currentGameVersion = el('currentGameVersion');
+    const gameVersion = el('gameVersion');
+    const loader = el('loader');
+    const outputMode = el('outputMode');
+    const outputDirectory = el('outputDirectory');
+    const outputOptions = el('outputOptions');
+    const rows = el('rows');
+    const updateAll = el('updateAll');
+    const openFolder = el('openFolder');
+    let toastTimer = null;
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+    }
+
+    function showToast(message, error = false) {
+      const toast = el('toast');
+      toast.textContent = message;
+      toast.classList.toggle('error', error);
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 4200);
+    }
+
+    function setBusy(value) {
+      state.busy = value;
+      for (const item of [el('browse'), el('browseOutput'), el('scan'), updateAll, currentGameVersion, gameVersion, loader, outputMode]) item.disabled = value;
+      updateAll.disabled = value || !state.rows.some((row) => row.updateAvailable);
+    }
+
+    function applyScan(result) {
+      state.rows = result.rows || [];
+      directory.value = result.options.directory;
+      currentGameVersion.value = result.options.currentGameVersion;
+      gameVersion.value = result.options.gameVersion;
+      outputMode.value = result.options.outputMode || 'in-place';
+      outputDirectory.value = result.options.outputDirectory || '';
+      updateOutputControls();
+      el('installedCount').textContent = state.rows.length;
+      el('updateCount').textContent = state.rows.filter((row) => row.updateAvailable).length;
+      el('unknownCount').textContent = state.rows.filter((row) => !row.identified).length;
+      openFolder.disabled = false;
+      openFolder.textContent = outputMode.value === 'folder' ? 'Open output folder' : 'Open mods folder';
+      updateAll.disabled = state.busy || !state.rows.some((row) => row.updateAvailable);
+      renderRows();
+    }
+
+    function statusClass(row) {
+      if (!row.identified || row.error || !row.compatible) return 'bad';
+      if (row.updateAvailable) return 'update';
+      return 'good';
+    }
+
+    function renderRows() {
+      if (!state.rows.length) {
+        rows.innerHTML = '<div class="empty"><div><strong>NO MODS FOUND</strong>The selected instance has no JAR files in its mods folder.</div></div>';
+        return;
+      }
+      rows.innerHTML = state.rows.map((row) => {
+        const icon = row.iconUrl
+          ? `<img class="modIcon" src="${escapeHtml(row.iconUrl)}" alt="">`
+          : '<div class="modIcon fallbackIcon">M</div>';
+        const project = row.identified ? `<button data-action="project" data-id="${row.id}">Page</button>` : '';
+        const update = row.updateAvailable ? `<button class="updateButton" data-action="update" data-id="${row.id}">Migrate</button>` : '';
+        return `<article class="modRow">
+          <div class="modInfo">${icon}<div><div class="modTitle">${escapeHtml(row.title)}${row.disabled ? ' (disabled)' : ''}</div><div class="modDescription" title="${escapeHtml(row.error || row.description || row.fileName)}">${escapeHtml(row.error || row.description || row.fileName)}</div></div></div>
+          <div class="version">${escapeHtml(row.currentMinecraftVersion || 'Unknown')}</div>
+          <div class="version latestColumn">${escapeHtml(row.compatible ? row.targetMinecraftVersion : 'Unavailable')}</div>
+          <div class="status ${statusClass(row)}">${escapeHtml(row.status)}</div>
+          <div class="actions">${project}${update}</div>
+        </article>`;
+      }).join('');
+    }
+
+    async function run(operation, successMessage = '') {
+      if (state.busy) return;
+      setBusy(true);
+      try {
+        const result = await operation();
+        if (successMessage) showToast(successMessage);
+        return result;
+      } catch (error) {
+        showToast(error.message || String(error), true);
+        el('statusText').textContent = error.message || String(error);
+        return null;
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function scan() {
+      if (!directory.value) return showToast('Choose the folder containing your mods first.', true);
+      const result = await run(() => api.scan({
+        directory: directory.value,
+        currentGameVersion: currentGameVersion.value,
+        gameVersion: gameVersion.value,
+        loader: loader.value,
+        channel: 'release',
+        outputMode: outputMode.value,
+        outputDirectory: outputDirectory.value
+      }));
+      if (result) applyScan(result);
+    }
+
+    rows.onclick = async (event) => {
+      const button = event.target.closest('button[data-action]');
+      if (!button || state.busy) return;
+      const row = state.rows.find((item) => item.id === button.dataset.id);
+      if (!row) return;
+      if (button.dataset.action === 'project') return api.openProject(row.projectId);
+      if (button.dataset.action === 'update') {
+        const result = await run(() => api.updateOne(row.id));
+        if (result) { applyScan(result.scan); showToast(result.result.output ? `${result.result.title} prepared for Minecraft ${gameVersion.value} in output.` : `${result.result.title} migrated for Minecraft ${gameVersion.value}.`); }
+      }
+    };
+
+    el('browse').onclick = async () => {
+      const selected = await api.chooseDirectory();
+      if (selected) {
+        directory.value = selected;
+      }
+    };
+    el('browseOutput').onclick = async () => {
+      const selected = await api.chooseOutputDirectory(outputDirectory.value || directory.value);
+      if (selected) {
+        outputDirectory.value = selected;
+        if (directory.value && state.rows.length) scan();
+      }
+    };
+    el('scan').onclick = scan;
+    currentGameVersion.onchange = () => { if (directory.value) scan(); };
+    gameVersion.onchange = () => { if (directory.value) scan(); };
+    loader.onchange = () => { if (directory.value) scan(); };
+    outputMode.onchange = () => {
+      updateOutputControls();
+      if (directory.value && state.rows.length) scan();
+    };
+    openFolder.onclick = () => api.openDirectory();
+    updateAll.onclick = async () => {
+      const result = await run(() => api.updateAll());
+      if (!result) return;
+      applyScan(result.scan);
+      const action = outputMode.value === 'folder' ? `prepared for Minecraft ${gameVersion.value}` : `migrated to Minecraft ${gameVersion.value}`;
+      const message = `${result.results.length} mod${result.results.length === 1 ? '' : 's'} ${action}${result.failures.length ? `, ${result.failures.length} failed` : ''}.`;
+      showToast(message, result.failures.length > 0);
+      if (result.failures.length) {
+        el('statusText').textContent = `${result.failures[0].title}: ${result.failures[0].error}`;
+      }
+    };
+    el('packsTab').onclick = () => showToast('Texture pack updates are the next planned section.');
+    el('adAction').onclick = () => showToast('The advertisement slot is ready to connect later.');
+    el('minimize').onclick = () => api.minimize();
+    el('maximize').onclick = () => api.maximize();
+    el('close').onclick = () => api.close();
+
+    api.onProgress((progress) => {
+      el('statusText').textContent = progress.message || 'Working';
+      const percent = progress.total ? Math.round((progress.current / progress.total) * 100) : 0;
+      el('progressBar').style.width = `${percent}%`;
+    });
+
+    function updateOutputControls() {
+      const usesFolder = outputMode.value === 'folder';
+      outputOptions.classList.toggle('hiddenPath', !usesFolder);
+      openFolder.textContent = usesFolder ? 'Open output folder' : 'Open mods folder';
+    }
+
+    async function bootstrap() {
+      try {
+        const data = await api.bootstrap();
+        gameVersion.innerHTML = data.gameVersions.map((item) => `<option value="${escapeHtml(item.version)}">${escapeHtml(item.version)}</option>`).join('');
+        currentGameVersion.innerHTML = gameVersion.innerHTML;
+        loader.innerHTML = data.loaders.map((name) => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+        directory.value = data.settings.directory || '';
+        const savedCurrentVersion = data.settings.currentGameVersion;
+        const savedVersion = data.settings.gameVersion;
+        if (savedCurrentVersion && [...currentGameVersion.options].some((item) => item.value === savedCurrentVersion)) currentGameVersion.value = savedCurrentVersion;
+        if (savedVersion && [...gameVersion.options].some((item) => item.value === savedVersion)) gameVersion.value = savedVersion;
+        if (data.settings.loader && [...loader.options].some((item) => item.value === data.settings.loader)) loader.value = data.settings.loader;
+        outputMode.value = data.settings.outputMode || 'in-place';
+        outputDirectory.value = data.settings.outputDirectory || '';
+        updateOutputControls();
+        el('statusText').textContent = 'Ready';
+      } catch (error) {
+        el('statusText').textContent = 'Could not reach Modrinth';
+        showToast(error.message || String(error), true);
+      }
+    }
+    bootstrap();
+  </script>
+</body>
+</html>

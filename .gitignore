@@ -1,0 +1,10 @@
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
+updater/output/*
+!updater/output/README.txt
+/Minecraft.ttf
+/banner.png
+/icon.png
+/ofely-background.png
