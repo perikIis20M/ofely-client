@@ -1,6 +1,6 @@
 # Ofely Client
 
-Official public website and source for the Ofely Mod Updater.
+Official public website and source for the Ofely Mod Updater, made by the Bedwarsers Team.
 
 - Website: `docs/`
 - Mod updater: `updater/`
