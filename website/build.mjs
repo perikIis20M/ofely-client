@@ -39,8 +39,8 @@ function shell(title, description, body, {active = 'projects', route = '/', imag
   <meta property="og:title" content="${esc(title)} | Bedwarsers"><meta property="og:description" content="${esc(description)}"><meta property="og:type" content="website"><meta property="og:url" content="${site.url}${route}"><meta property="og:image" content="${site.url}${image}"><meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="${site.url}${route}"><link rel="icon" href="/assets/bedwarsers.webp" type="image/webp"><link rel="apple-touch-icon" href="/assets/bedwarsers.webp">
   <link rel="preload" href="/assets/Minecraft.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="/styles.css?v=bedwarsers-20261019"><script src="/script.js?v=bedwarsers-20261019" defer></script>
-  </head><body>${header(active)}<main id="main">${body}</main>${footer()}</body></html>`;
+  <link rel="stylesheet" href="/styles.css?v=project-guides-20261019"><script src="/script.js?v=bedwarsers-20261019" defer></script>
+  </head><body>${header(active)}<main id="main">${body}</main>${footer()}</body></html>`.replace(/[\t ]+$/gm,'');
 }
 
 function card(p) {
@@ -83,13 +83,42 @@ function credits(p) {
   return `<section class="credits-section"><div class="wrap"><span class="eyebrow">THE PEOPLE BEHIND IT</span><h2>Made together.</h2><div class="credits-grid">${p.credits.map(([key,role])=>{const person=people[key];return `<div class="contributor"><img src="/assets/portraits/${person.avatar}" alt="" width="64" height="64" loading="lazy"><div><h3>${person.name}</h3><p>${role}</p></div>${person.discord ? `<a href="https://discord.com/users/${person.discord}" target="_blank" rel="noopener noreferrer" aria-label="${person.name} on Discord">${icon('ArrowUpRight')}</a>` : ''}</div>`;}).join('')}</div>${p.attribution ? `<p class="attribution">${esc(p.attribution)}</p>` : ''}</div></section>`;
 }
 
+function sectionId(section, index) {
+  return section.id || `section-${index+1}`;
+}
+
+function projectSection(section, index) {
+  const table = section.table;
+  return `<section class="story-section" id="${sectionId(section,index)}">
+    <span class="story-number">0${index+1}</span><h2>${esc(section.title)}</h2><p>${esc(section.text)}</p>
+    ${(section.paragraphs || []).map(text=>`<p>${esc(text)}</p>`).join('')}
+    ${section.bullets ? `<ul class="feature-list">${section.bullets.map(text=>`<li>${icon('Check')}<span>${esc(text)}</span></li>`).join('')}</ul>` : ''}
+    ${section.steps ? `<ol class="project-steps">${section.steps.map(step=>`<li><h3>${esc(step.title)}</h3><p>${esc(step.text)}</p></li>`).join('')}</ol>` : ''}
+    ${table ? `<div class="reference-table" role="region" tabindex="0" aria-label="${esc(table.caption)}"><table><caption>${esc(table.caption)}</caption><thead><tr>${table.headers.map(header=>`<th scope="col">${esc(header)}</th>`).join('')}</tr></thead><tbody>${table.rows.map(row=>`<tr>${row.map((cell,i)=>`<td>${table.codeColumn===i ? `<code>${esc(cell)}</code>` : esc(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : ''}
+    ${section.code ? `<div class="config-example"><span>${esc(section.code.language)} / DOCUMENTED EXAMPLE</span><pre><code>${esc(section.code.text)}</code></pre></div>` : ''}
+    ${section.image ? `<figure class="documentation-image"><img src="/assets/${esc(section.image.src)}" alt="${esc(section.image.alt)}" loading="lazy"><figcaption>${esc(section.image.caption)}</figcaption></figure>` : ''}
+    ${section.note ? `<aside class="project-note"><strong>Good to know</strong><p>${esc(section.note)}</p></aside>` : ''}
+  </section>`;
+}
+
 function detail(p) {
   const related = projects.filter(other=>other.slug!==p.slug).sort((a,b)=>Number(b.category===p.category)-Number(a.category===p.category)).slice(0,3);
+  const contents = p.sources ? `<nav class="project-contents" aria-label="On this page"><span class="eyebrow">ON THIS PAGE</span>${p.sections.map((s,i)=>`<a href="#${sectionId(s,i)}">${esc(s.title)}</a>`).join('')}</nav>` : '';
   return shell(p.title, p.summary, `
     <section class="project-heading ${p.color}"><div class="wrap"><nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/projects/">Projects</a><span>/</span><span aria-current="page">${p.title}</span></nav><div class="project-heading-main"><div class="project-title-group">${projectMark(p)}<div><span class="eyebrow">${p.category.toUpperCase()} / BEDWARSERS</span><h1>${p.title}</h1></div></div>${status(p)}</div><p class="project-lead">${p.summary}</p><div class="project-actions">${p.links.slice(0,1).map(([label,url])=>link(label,url)).join('')}<a class="text-link" href="#about">Explore ${icon('ArrowDown')}</a></div></div></section>
-    <div class="wrap detail-layout" id="about"><article class="project-body"><span class="eyebrow">ABOUT THE PROJECT</span><p class="project-intro">${p.intro}</p>${p.screenshot ? `<figure class="launcher-shot"><img src="/assets/${p.screenshot}" width="1280" height="720" alt="${p.screenshotAlt}" loading="lazy"><figcaption>The actual Ofely Client launcher, currently in development.</figcaption></figure>` : ''}${p.facts ? `<dl class="server-facts">${p.facts.map(([label,value])=>`<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')}</dl>` : ''}${p.sections.map((s,i)=>`<section class="story-section"><span class="story-number">0${i+1}</span><h2>${s.title}</h2><p>${s.text}</p>${s.bullets ? `<ul class="feature-list">${s.bullets.map(text=>`<li>${icon('Check')}<span>${esc(text)}</span></li>`).join('')}</ul>` : ''}</section>`).join('')}${p.community ? `<p class="community-note">${icon('Users')}The server's community was on <a href="${p.community}" target="_blank" rel="noopener noreferrer">Discord ${icon('ArrowUpRight')}</a>.</p>` : ''}</article><aside class="project-aside" aria-label="Project details"><span class="eyebrow">AT A GLANCE</span><dl><div><dt>Status</dt><dd>${status(p)}</dd></div><div><dt>Project type</dt><dd>${p.category}</dd></div><div><dt>Platform</dt><dd>${p.platform}</dd></div><div><dt>Team</dt><dd><a href="/team/">Bedwarsers ${icon('ArrowUpRight')}</a></dd></div></dl>${p.links.length ? `<div class="aside-links"><span class="eyebrow">OFFICIAL LINKS</span>${p.links.map(([label,url])=>link(label,url,'aside-link')).join('')}</div>` : ''}<a class="back-link" href="/projects/">${icon('ArrowLeft')} Back to all projects</a></aside></div>
+    <div class="wrap detail-layout" id="about"><article class="project-body">
+      <span class="eyebrow">ABOUT THE PROJECT</span><p class="project-intro">${esc(p.intro)}</p>
+      ${p.screenshot ? `<figure class="launcher-shot"><img src="/assets/${p.screenshot}" width="1280" height="720" alt="${p.screenshotAlt}" loading="lazy"><figcaption>The actual Ofely Client launcher, currently in development.</figcaption></figure>` : ''}
+      ${p.facts ? `<dl class="server-facts">${p.facts.map(([label,value])=>`<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>` : ''}
+      ${p.shortcut ? `<div class="shortcut-feature"><kbd>${esc(p.shortcut.key)}</kbd><div><h2>${esc(p.shortcut.title)}</h2><p>${esc(p.shortcut.description)}</p><span>${esc(p.shortcut.path)}</span></div></div>` : ''}
+      ${p.sections.map(projectSection).join('')}
+      ${p.community ? `<p class="community-note">${icon('Users')}The server's community was on <a href="${p.community}" target="_blank" rel="noopener noreferrer">Discord ${icon('ArrowUpRight')}</a>.</p>` : ''}
+      ${p.sources ? `<section class="project-sources"><span class="eyebrow">PROJECT DOCUMENTATION</span><p>Read the original documentation and check individual files for release-specific requirements.</p>${p.sources.map(([label,url])=>link(label,url,'text-link')).join('')}</section>` : ''}
+    </article><aside class="project-aside" aria-label="Project details"><span class="eyebrow">AT A GLANCE</span><dl><div><dt>Status</dt><dd>${status(p)}</dd></div><div><dt>Project type</dt><dd>${p.category}</dd></div><div><dt>Platform</dt><dd>${p.platform}</dd></div><div><dt>Team</dt><dd><a href="/team/">Bedwarsers ${icon('ArrowUpRight')}</a></dd></div></dl>
+      ${contents}${p.links.length ? `<div class="aside-links"><span class="eyebrow">OFFICIAL LINKS</span>${p.links.map(([label,url])=>link(label,url,'aside-link')).join('')}</div>` : ''}<a class="back-link" href="/projects/">${icon('ArrowLeft')} Back to all projects</a>
+    </aside></div>
     ${credits(p)}<section class="section wrap related"><div class="section-heading"><div><span class="eyebrow">KEEP EXPLORING</span><h2>More from the team.</h2></div><a class="text-link" href="/projects/">All projects ${icon('ArrowUpRight')}</a></div><div class="project-grid related-grid">${related.map(card).join('')}</div></section>
-  `, {route:`/${p.slug}/`,active:p.category==='SMP'?'smps':'projects',image:p.icon?`/assets/${p.icon}`:'/assets/island-scene.webp'});
+  `, {route:`/${p.slug}/`,active:p.category==='SMP'?'smps':'projects',image:p.icon?`/assets/${p.icon}`:'/assets/island-bed.webp'});
 }
 
 await fs.mkdir(out, {recursive:true});

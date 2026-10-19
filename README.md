@@ -31,6 +31,8 @@ npm run preview:site
 
 The preview is available at `http://127.0.0.1:4178`. Edit project content, roles, statuses, and links in `website/data.mjs`; edit the layout in `website/build.mjs` and styling in `website/styles.css`. Rebuild after source changes.
 
+Long-form guides for the six Modrinth-related projects live in `website/project-details.mjs`. They override the detail-page introductions and sections while retaining the concise catalog summaries. Sections can include paragraphs, steps, comparison or command tables, configuration examples, documented images, and notes. Their IDs drive the page's contents links. Official documentation links are included at the end of each guide; unpublished projects retain their review status.
+
 `website/prepare-assets.cjs` is a one-time asset import utility, using Sharp and Lucide. It records the original local asset locations used for this rebuild; ordinary content changes do not require running it. Minecraft skin renders are stored locally by UUID, and member portraits come from the supplied pictures. Ofely's private Minecraft username is not published.
 
 Browser QA can be rerun with `node website/qa.cjs` when Playwright and Chrome are installed and the preview server is running. It checks all 15 main pages at four viewport sizes, filters, navigation, image loading, reduced motion, and internal links.

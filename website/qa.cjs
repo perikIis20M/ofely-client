@@ -30,13 +30,15 @@ async function main() {
         h1: document.querySelector('h1')?.textContent,
         brokenImages: [...document.images].filter(image=>!image.complete || image.naturalWidth===0).map(image=>image.src),
         clipped: [...document.querySelectorAll('h1,h2,h3,.button,.member-role')].filter(el=>el.scrollWidth>el.clientWidth+2).map(el=>el.textContent),
+        brokenAnchors: [...document.querySelectorAll('a[href^="#"]')].filter(el=>!document.getElementById(el.getAttribute('href').slice(1))).map(el=>el.getAttribute('href')),
       }));
       assert.equal(result.overflow, false, `Page overflow: ${width} ${route}`);
       assert.deepEqual(result.brokenImages, [], `Broken images: ${width} ${route}`);
       assert.deepEqual(result.clipped, [], `Clipped text: ${width} ${route}`);
+      assert.deepEqual(result.brokenAnchors, [], `Broken section links: ${width} ${route}`);
       assert.ok(result.h1, `Missing main heading: ${route}`);
       report.push({width,route,...result});
-      if ((width === 1440 || width === 390) && ['/', '/projects/', '/ofely/', '/bountysmp/', '/improved-advancements-screen/'].includes(route)) {
+      if ((width === 1440 || width === 390) && ['/', '/projects/', '/ofely/', '/bountysmp/', '/rowglide/', '/quitkeybind/', '/op-login/', '/bwhitelist/', '/combat-log-detector/', '/improved-advancements-screen/'].includes(route)) {
         await page.screenshot({path:path.join(output,`${width}-${route==='/'?'home':route.split('/')[1]}.png`),fullPage:true});
       }
     }

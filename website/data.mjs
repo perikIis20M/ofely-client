@@ -1,3 +1,5 @@
+import {projectDetails} from './project-details.mjs';
+
 export const site = {
   name: 'Bedwarsers',
   url: 'https://bwrs.online',
@@ -152,3 +154,7 @@ export const projects = [
 ];
 
 export const team = ['periklis', 'john', 'foldar', 'ofely'];
+
+for (const project of projects) {
+  if (projectDetails[project.slug]) Object.assign(project, projectDetails[project.slug]);
+}
