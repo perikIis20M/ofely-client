@@ -9,3 +9,5 @@ updater/output/*
 /icon.png
 /ofely-background.png
 /qa-site-*.png
+/qa-*.png
+/website/qa-output/

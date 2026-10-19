@@ -4,6 +4,8 @@
   "private": true,
   "description": "Ofely Client website and Minecraft mod migration utility",
   "scripts": {
+    "build:site": "node website/build.mjs",
+    "preview:site": "node website/serve.mjs",
     "updater": "electron updater"
   },
   "devDependencies": {

@@ -1,0 +1,42 @@
+[
+  {
+    "title": "RowGlide",
+    "slug": "rowglide",
+    "description": "Smooth drag-and-drop reordering for multiplayer servers and selected resource packs, with easy transfers between Available and Selected.",
+    "status": "approved",
+    "icon_url": "https://cdn.modrinth.com/data/EAQGLgI1/607fc2c3ad5134f81bc15f6d9a6ed4a068733298_96.webp",
+    "checked": "2026-10-19"
+  },
+  {
+    "title": "QuitKeybind",
+    "slug": "quitkeybind",
+    "description": "Disconnect from any server or leave a singleplayer world instantly with one customizable keybind.",
+    "status": "approved",
+    "icon_url": "https://cdn.modrinth.com/data/wCpQk5R7/acf732bebba6a0107cb734e3b176acce414444d7_96.webp",
+    "checked": "2026-10-19"
+  },
+  {
+    "title": "Op Login",
+    "slug": "op-login",
+    "description": "OpLogin keeps operator accounts safe by locking admin privileges until the real player authenticates. It adds a simple extra layer of protection against stolen accounts, shared access, and accidental permission abuse.",
+    "status": "approved",
+    "icon_url": "https://cdn.modrinth.com/data/PhGsxDZn/ca1d95b4d61d6d6d45722f4e5de6c485d96b6f96_96.webp",
+    "checked": "2026-10-19"
+  },
+  {
+    "title": "Combat Log Detector Plugin",
+    "slug": "combat-log-detector-plugin",
+    "description": "The Combat Log Detector is a Minecraft plugin that tracks players engaging in PvP and detects combat logging (players leaving during combat). It integrates with Discord to send notifications with player information, ensuring server admins are informed wit",
+    "status": "archived",
+    "icon_url": "https://cdn.modrinth.com/data/LKdoPzTo/72e4ac3941e8b441d3ca956a24519b464545ea5d_96.webp",
+    "checked": "2026-10-19"
+  },
+  {
+    "title": "bwhitelist",
+    "slug": "bwhitelist",
+    "description": "A superior whitelist plugin for Minecraft servers that fixes the vanilla whitelist's limitations. No more \"Player does not exist\" errors when trying to whitelist players!",
+    "status": "archived",
+    "icon_url": "https://cdn.modrinth.com/data/CuROhcuG/283f4a356c3415a12979283f411a17e4fd4a688f_96.webp",
+    "checked": "2026-10-19"
+  }
+]
