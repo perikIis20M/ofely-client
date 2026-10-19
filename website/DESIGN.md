@@ -28,3 +28,11 @@ Use case: background-extraction. This attached generated image is the edit targe
 Use case: precise-object-edit. This generated Minecraft scene is the edit target. Remove ALL floating islands, cottage, trees, terrain and stone. Inpaint with continuous soft Minecraft shader sky and cubic clouds exactly matching the surrounding sky. Preserve the warm sun at upper right and blue skies, warm bright soft clouds below. Result is an empty, beautiful, full-bleed Minecraft sky background plate for independent island sprites to float on top of. No land, no islands, no typography or watermark. Landscape wide.
 
 The sky plate stays stationary while separate transparent island layers gently float. Reduced-motion preferences disable their movement.
+
+## Bed island revision
+
+The cottage was replaced at the team's request with a large red Minecraft bed. The built-in image-generation tool edited the existing transparent island, keeping the scenery, perspective, lighting, and alpha transparency. The new asset is `docs/assets/island-bed.webp`; all three animated islands now use it.
+
+Prompt: Edit the attached transparent Minecraft floating island asset. Replace the wooden cottage and its roof, chimney and smoke completely with one prominent red Minecraft bed with a white pillow and wooden legs, at approximately the cottage's footprint. Preserve the grass-and-stone island, pointed underside, trees, flowers, paths, fence, lanterns, shader lighting, camera perspective, and transparent background. Keep the complete island in frame. No house, sky, text, or added objects.
+
+JohnFG's Mojang profile was verified against UUID `fdd4aec7b50a4d3c82b89338805d552e`. The original mc-heads.net render returned stale Steve imagery even though the current Minecraft texture is a blue crowned character. A verified fresh render from vzge.me is stored locally as `docs/assets/skins/john-188e2903.png`; the filename includes the start of the texture hash to avoid browser caches retaining the stale image.

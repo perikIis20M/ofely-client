@@ -15,6 +15,8 @@ export const people = {
   },
   john: {
     name: 'JohnFG', uuid: 'fdd4aec7b50a4d3c82b89338805d552e',
+    skin: 'john-188e2903.png',
+    skinSource: 'https://vzge.me/full/512/fdd4aec7b50a4d3c82b89338805d552e.png',
     avatar: 'johnfg.webp', discord: '848928238612512838',
     role: 'Developer, SMP founder & tester',
     description: 'Turning ideas into mods and the powers behind our survival worlds.',
